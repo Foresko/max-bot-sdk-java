@@ -40,9 +40,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>ru.max</groupId>
-            <artifactId>max-bot-api</artifactId>
-            <version>0.0.6-SNAPSHOT</version>
+            <groupId>com.github.max-messenger</groupId>
+            <artifactId>max-bot-api-client-java</artifactId>
+            <version>2c2a05e0bf</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -241,6 +241,10 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 </project>
