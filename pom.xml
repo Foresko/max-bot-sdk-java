@@ -40,9 +40,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.max-messenger</groupId>
+            <groupId>com.github.Foresko</groupId>
             <artifactId>max-bot-api-client-java</artifactId>
-            <version>2c2a05e0bf</version>
+            <version>997f5d544c</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
