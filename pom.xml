@@ -42,7 +42,7 @@
         <dependency>
             <groupId>com.github.Foresko</groupId>
             <artifactId>max-bot-api-client-java</artifactId>
-            <version>dd975f146d</version>
+            <version>2c955b9b67</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
