@@ -56,7 +56,7 @@ public class WebhookBot extends MaxBotBase implements MaxBot {
         }
 
         try {
-            subscribe(container.getWebhookUrl(this));
+            subscribe(container.getWebhookUrl(this), options.getSecret());
         } catch (APIException | ClientException e) {
             throw new MaxBotException("Failed to start webhook bot", e);
         }
@@ -82,8 +82,19 @@ public class WebhookBot extends MaxBotBase implements MaxBot {
         return running.get();
     }
 
+    public String getSecret() {
+        return options.getSecret();
+    }
+
     protected void subscribe(String webhookUrl) throws APIException, ClientException {
+        subscribe(webhookUrl, null);
+    }
+
+    protected void subscribe(String webhookUrl, String secret) throws APIException, ClientException {
         SubscriptionRequestBody body = new SubscriptionRequestBody(webhookUrl);
+        if (secret != null) {
+            body.setSecret(secret);
+        }
         body.updateTypes(options.getUpdateTypes());
         new SubscribeQuery(getClient(), body).execute();
         LOG.info("Bot {} registered webhook URL: {}", this, webhookUrl);

@@ -3,8 +3,10 @@ package ru.max.bot.webhook;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +87,8 @@ public abstract class WebhookBotContainerBase implements WebhookBotContainer {
     }
 
     @Override
-    public String handleRequest(String path, String method, InputStream body) throws WebhookException {
+    public String handleRequest(String path, String method, @Nullable String secret, InputStream body)
+            throws WebhookException {
         if (!method.equals("POST")) {
             return "OK";
         }
@@ -93,6 +96,11 @@ public abstract class WebhookBotContainerBase implements WebhookBotContainer {
         WebhookBot bot = bots.get(path);
         if (bot == null) {
             throw new BotNotFoundException("No bot registered by path: " + path);
+        }
+
+        String expectedSecret = bot.getSecret();
+        if (expectedSecret != null && !Objects.equals(expectedSecret, secret)) {
+            throw new WebhookException(401, "Invalid webhook secret");
         }
 
         MaxSerializer serializer = bot.getClient().getSerializer();

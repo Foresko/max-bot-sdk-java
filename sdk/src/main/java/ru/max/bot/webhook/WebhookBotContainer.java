@@ -9,6 +9,9 @@ import ru.max.bot.exceptions.MaxBotException;
 import ru.max.bot.exceptions.WebhookException;
 
 public interface WebhookBotContainer {
+
+    String SECRET_HEADER = "X-Max-Bot-Api-Secret";
+
     /**
      * Registers bot in container.
      */
@@ -48,5 +51,20 @@ public interface WebhookBotContainer {
      * @return response. Can be `null` if bot doesn't send any response to Bot API.
      */
     @Nullable
-    String handleRequest(String path, String method, InputStream body) throws WebhookException, IOException;
+    default String handleRequest(String path, String method, InputStream body) throws WebhookException, IOException {
+        return handleRequest(path, method, null, body);
+    }
+
+    /**
+     * Accepts incoming HTTP request and delegates it to bot if it is valid webhook update.
+     *
+     * @param path   full path of request
+     * @param method HTTP-method
+     * @param secret webhook secret from {@link #SECRET_HEADER}
+     * @param body   request body
+     * @return response. Can be `null` if bot doesn't send any response to Bot API.
+     */
+    @Nullable
+    String handleRequest(String path, String method, @Nullable String secret, InputStream body)
+            throws WebhookException, IOException;
 }

@@ -32,6 +32,7 @@ class WebhookDispatcher extends Handler.Abstract {
             webhookResponse = botContainer.handleRequest(
                     request.getHttpURI().getPath(),
                     request.getMethod(),
+                    request.getHeaders().get(WebhookBotContainer.SECRET_HEADER),
                     Request.asInputStream(request)
             );
         } catch (BotNotFoundException e) {

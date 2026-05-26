@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import ru.max.bot.exceptions.WebhookException;
 import ru.max.bot.webhook.WebhookBot;
+import ru.max.bot.webhook.WebhookBotContainer;
 import ru.max.bot.webhook.WebhookBotContainerBase;
 
 public class ServletWebhookBotContainer extends WebhookBotContainerBase implements Servlet {
@@ -60,7 +61,12 @@ public class ServletWebhookBotContainer extends WebhookBotContainerBase implemen
         protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException {
             String webhookResponse;
             try {
-                webhookResponse = handleRequest(req.getPathInfo(), req.getMethod(), req.getInputStream());
+                webhookResponse = handleRequest(
+                        req.getPathInfo(),
+                        req.getMethod(),
+                        req.getHeader(WebhookBotContainer.SECRET_HEADER),
+                        req.getInputStream()
+                );
             } catch (WebhookException e) {
                 resp.sendError(e.getErrorCode(), e.getMessage());
                 return;

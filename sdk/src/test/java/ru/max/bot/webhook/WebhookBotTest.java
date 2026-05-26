@@ -1,5 +1,6 @@
 package ru.max.bot.webhook;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import ru.max.bot.Randoms;
+import ru.max.bot.exceptions.WebhookException;
 import ru.max.bot.webhook.jetty.JettyWebhookBotContainer;
 import ru.max.botapi.client.ClientResponse;
 import ru.max.botapi.client.MaxClient;
@@ -30,6 +32,7 @@ import ru.max.botapi.queries.SubscribeQuery;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -103,12 +106,51 @@ public class WebhookBotTest {
         assertThat(bot2.receivedUpdates, is(sentUpdates2));
     }
 
+    @Test
+    public void shouldReceiveWebhookWithValidSecret() throws Exception {
+        WebhookBotOptions options = new WebhookBotOptions(null);
+        options.setSecret("expected-secret");
+        TestBot secureBot = new TestBot(client, "securebot", options);
+        container.register(secureBot);
+
+        Update update = Randoms.randomUpdate();
+        byte[] bytes = serializer.serialize(update);
+
+        container.handleRequest("/securebot", "POST", "expected-secret", new ByteArrayInputStream(bytes));
+
+        assertThat(secureBot.receivedUpdates.contains(update), is(true));
+    }
+
+    @Test
+    public void shouldRejectWebhookWithInvalidSecret() throws Exception {
+        WebhookBotOptions options = new WebhookBotOptions(null);
+        options.setSecret("expected-secret");
+        TestBot secureBot = new TestBot(client, "securebot", options);
+        container.register(secureBot);
+
+        Update update = Randoms.randomUpdate();
+        byte[] bytes = serializer.serialize(update);
+
+        try {
+            container.handleRequest("/securebot", "POST", "wrong-secret", new ByteArrayInputStream(bytes));
+            fail("WebhookException expected");
+        } catch (WebhookException e) {
+            assertThat(e.getErrorCode(), is(401));
+        }
+
+        assertThat(secureBot.receivedUpdates.contains(update), is(false));
+    }
+
     private class TestBot extends WebhookBot {
         private final String key;
         Set<Update> receivedUpdates = ConcurrentHashMap.newKeySet();
 
         TestBot(MaxClient client, String key) {
-            super(client, WebhookBotOptions.DEFAULT);
+            this(client, key, WebhookBotOptions.DEFAULT);
+        }
+
+        TestBot(MaxClient client, String key, WebhookBotOptions options) {
+            super(client, options);
             this.key = key;
         }
 
