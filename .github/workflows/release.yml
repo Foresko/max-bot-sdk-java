@@ -2,24 +2,29 @@ name: Release
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
 
 jobs:
-  build:
-
+  release:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
         with:
-          java-version: 1.8
-      - name: Release Maven package
-        uses: samuelmeuli/action-maven-publish@v1
+          distribution: temurin
+          java-version: 8
+
+      - name: Verify project
+        run: ./mvnw -B verify
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
         with:
-          gpg_private_key: ${{ secrets.gpg_private_key }}
-          gpg_passphrase: ${{ secrets.gpg_passphrase }}
-          nexus_username: ${{ secrets.nexus_username }}
-          nexus_password: ${{ secrets.nexus_password }}
+          generate_release_notes: true

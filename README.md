@@ -5,6 +5,16 @@
 Max Bot SDK is a simple library built on top of [max-bot-api-client-java](https://github.com/max-messenger/max-bot-api-client-java) that
 helps you to develop bots for [Max](https://web.max.ru) quickly.
 
+## Build
+
+This repository uses Maven Wrapper, so Maven does not have to be installed globally.
+
+```bash
+./mvnw verify
+```
+
+The SDK lives in the `sdk` module, and examples are built as sibling modules in the same Maven reactor.
+
 ## Usage
 
 Add the following dependency to your project:
@@ -29,7 +39,7 @@ Then you should choose the way how your bot will receive notifications: long-pol
 
 Long-polling is the easiest way to receive updates for your bot because it does not require running web server.
 
-To start your bot just extend [`LongPollingBot`](src/main/java/ru/max/bot/longpolling/LongPollingBot.java) class and add methods annotated by [`@UpdateHandler`](src/main/java/ru/max/bot/annotations/UpdateHandler.java) annotation.
+To start your bot just extend [`LongPollingBot`](sdk/src/main/java/ru/max/bot/longpolling/LongPollingBot.java) class and add methods annotated by [`@UpdateHandler`](sdk/src/main/java/ru/max/bot/annotations/UpdateHandler.java) annotation.
 
 These methods must have **only** one parameter with concrete implementation of [`Update`](https://github.com/max-messenger/max-bot-api-client-java/blob/main/src/main/java/ru/max/botapi/model/Update.java). Every method will handle update of such type.
 
@@ -52,7 +62,7 @@ public class ReplyBot extends LongPollingBot {
 }
 ```
 
-All other updates will be ignored. If you want to handle every update just override `onUpdate` method of [`MaxBotBase`](src/main/java/ru/max/bot/MaxBotBase.java).
+All other updates will be ignored. If you want to handle every update just override `onUpdate` method of [`MaxBotBase`](sdk/src/main/java/ru/max/bot/MaxBotBase.java).
 
 Alternatively, you can directly create instance of `LongPollingBot` and pass handlers to constructor:
 ```java
@@ -109,7 +119,7 @@ as an example of alternative container implementation.
 
 ### Handling bot commands
 
-Along with update handlers, methods can be annotated by [`@CommandHandler`](src/main/java/ru/max/bot/annotations/CommandHandler.java). Every method will handle command with the name specified in the annotation.
+Along with update handlers, methods can be annotated by [`@CommandHandler`](sdk/src/main/java/ru/max/bot/annotations/CommandHandler.java). Every method will handle command with the name specified in the annotation.
 These methods must have [`Message`](https://github.com/max-messenger/max-bot-api-client-java/blob/main/src/main/java/ru/max/botapi/model/Message.java) **as the first parameter**. Also, these methods can have command args in the method definition. 
 Example: user typed "/command2 text max", then "text" will be arg1 and "max" will be arg2.
 ```java

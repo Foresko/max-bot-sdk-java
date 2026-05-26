@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
-echo "Starting bot…"
-exec mvn -q exec:java -Dexec.args="--token $1"
+
+echo "Starting bot..."
+cd "$(dirname "$0")/../.." || exit 1
+exec ./mvnw -q -pl examples/longpolling-echobot -am exec:java -Dexec.args="--token $1"

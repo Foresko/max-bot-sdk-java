@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import ru.max.bot.Randoms;
 import ru.max.botapi.client.MaxClient;
@@ -27,7 +27,7 @@ import ru.max.botapi.queries.GetSubscriptionsQuery;
 import ru.max.botapi.queries.GetUpdatesQuery;
 
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,7 +40,7 @@ public class LongPollingBotTest {
     public void setUp() throws Exception {
         allUpdates = Stream.generate(Randoms::randomUpdate).limit(945).collect(Collectors.toList());
         when(client.newCall(isA(GetUpdatesQuery.class))).thenAnswer(i -> {
-            GetUpdatesQuery query = i.getArgumentAt(0, GetUpdatesQuery.class);
+            GetUpdatesQuery query = i.getArgument(0, GetUpdatesQuery.class);
             long from = query.marker.getValue() == null ? 0 : query.marker.getValue();
             if (from >= allUpdates.size()) {
                 return CompletableFuture.completedFuture(new UpdateList(Collections.emptyList(), null));
