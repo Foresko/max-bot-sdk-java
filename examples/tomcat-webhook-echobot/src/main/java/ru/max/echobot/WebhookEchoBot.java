@@ -11,6 +11,8 @@ import java.util.Objects;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.tomcat.util.net.SSLHostConfig;
+import org.apache.tomcat.util.net.SSLHostConfigCertificate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,25 +86,26 @@ public class WebhookEchoBot extends WebhookBot {
         connector.setPort(port);
         connector.setSecure(true);
         connector.setScheme("https");
-        connector.setAttribute("SSLEnabled", "true");
-        connector.setAttribute("SSLProtocol", "TLSv1+TLSv1.1+TLSv1.2");
-        connector.setAttribute("SSLCipherSuite",
-                "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA" +
-                        "-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA" +
-                        "-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE" +
-                        "-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE" +
-                        "-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS" +
-                        "-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256" +
-                        "-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5" +
-                        ":!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA");
 
         Path crtFile = getPath("localhost.crt");
         Path keyFile = getPath("localhost.key");
-        connector.setAttribute("SSLHonorCipherOrder", "true");
-        connector.setAttribute("SSLDisableCompression", "true");
-        connector.setAttribute("SSLCertificateFile", crtFile.toString());
-        connector.setAttribute("SSLCertificateKeyFile", keyFile.toString());
-        connector.setAttribute("SSLVerifyClient", "optional");
+
+        connector.setProperty("SSLEnabled", "true");
+
+        SSLHostConfig sslHostConfig = new SSLHostConfig();
+        sslHostConfig.setProtocols("TLSv1.2,TLSv1.3");
+        sslHostConfig.setHonorCipherOrder(true);
+        sslHostConfig.setDisableCompression(true);
+        sslHostConfig.setCertificateVerification("optional");
+
+        SSLHostConfigCertificate certificate = new SSLHostConfigCertificate(
+                sslHostConfig,
+                SSLHostConfigCertificate.Type.RSA
+        );
+        certificate.setCertificateFile(crtFile.toString());
+        certificate.setCertificateKeyFile(keyFile.toString());
+        sslHostConfig.addCertificate(certificate);
+        connector.addSslHostConfig(sslHostConfig);
         return connector;
     }
 

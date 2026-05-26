@@ -4,7 +4,6 @@ import java.lang.invoke.MethodHandles;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +66,7 @@ public class JettyWebhookBotContainer extends WebhookBotContainerBase {
             return webhookDispatcherHandler;
         }
 
-        return new HandlerList(webhookDispatcherHandler, currentHandler);
+        return new Handler.Sequence(webhookDispatcherHandler, currentHandler);
     }
 
 }

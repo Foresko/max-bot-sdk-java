@@ -149,7 +149,7 @@ public class ReplyBot extends LongPollingBot {
 
 ## Requirements
 
-Minimum required version of Java is 8.
+Minimum required version of Java is 17.
 
 ## Contributing
 

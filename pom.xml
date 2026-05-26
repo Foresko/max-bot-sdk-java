@@ -44,30 +44,29 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
 
         <max-bot-api-client-java.version>2c955b9b67</max-bot-api-client-java.version>
-        <slf4j.version>1.7.36</slf4j.version>
-        <jetty.version>9.4.57.v20241219</jetty.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <jetty.version>12.1.9</jetty.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
-        <commons-io.version>2.20.0</commons-io.version>
+        <commons-io.version>2.22.0</commons-io.version>
         <jopt-simple.version>5.0.4</jopt-simple.version>
-        <tomcat.version>9.0.117</tomcat.version>
+        <tomcat.version>11.0.22</tomcat.version>
 
         <junit.version>4.13.2</junit.version>
-        <mockito.version>4.11.0</mockito.version>
-        <hamcrest.version>2.2</hamcrest.version>
+        <mockito.version>5.23.0</mockito.version>
+        <hamcrest.version>3.0</hamcrest.version>
 
         <exec-maven-plugin.version>3.6.3</exec-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
-        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
         <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
         <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
-        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
+        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
     </properties>
 
