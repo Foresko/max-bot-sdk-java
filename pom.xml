@@ -10,7 +10,7 @@
     <version>0.0.6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Max Java Bot SDK</name>
+    <name>Max Java Bot SDK Parent</name>
     <inceptionYear>2025</inceptionYear>
     <description>Java SDK to build bots for Max messenger</description>
     <url>https://github.com/max-messenger/max-bot-sdk-java</url>
