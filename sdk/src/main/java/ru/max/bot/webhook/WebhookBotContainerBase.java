@@ -1,15 +1,8 @@
 package ru.max.bot.webhook;
 
-import java.io.InputStream;
-import java.lang.invoke.MethodHandles;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import ru.max.bot.MaxBot;
 import ru.max.bot.exceptions.BotNotFoundException;
 import ru.max.bot.exceptions.MaxBotException;
@@ -17,6 +10,12 @@ import ru.max.bot.exceptions.WebhookException;
 import ru.max.botapi.client.MaxSerializer;
 import ru.max.botapi.exceptions.SerializationException;
 import ru.max.botapi.model.Update;
+
+import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Base implementation of {@link WebhookBotContainer} that registers bots in map, parses incoming requests as
@@ -124,6 +123,12 @@ public abstract class WebhookBotContainerBase implements WebhookBotContainer {
      * @return full bot HTTP path inside container
      */
     protected String getPath(WebhookBot bot) {
-        return "/" + bot.getKey();
+        String webhookUrl = getWebhookUrl(bot);
+
+        if (webhookUrl.endsWith("/")) {
+            return webhookUrl + bot.getKey();
+        } else {
+            return webhookUrl + "/" + bot.getKey();
+        }
     }
 }
