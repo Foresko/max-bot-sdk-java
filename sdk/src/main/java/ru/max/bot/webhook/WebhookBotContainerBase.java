@@ -13,6 +13,7 @@ import ru.max.botapi.model.Update;
 
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
+import java.net.URI;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -123,12 +124,6 @@ public abstract class WebhookBotContainerBase implements WebhookBotContainer {
      * @return full bot HTTP path inside container
      */
     protected String getPath(WebhookBot bot) {
-        String webhookUrl = getWebhookUrl(bot);
-
-        if (webhookUrl.endsWith("/")) {
-            return webhookUrl + bot.getKey();
-        } else {
-            return webhookUrl + "/" + bot.getKey();
-        }
+        return URI.create(getWebhookUrl(bot)).getRawPath();
     }
 }
